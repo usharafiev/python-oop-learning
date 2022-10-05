@@ -21,22 +21,25 @@ class Registration:
     def is_include_all_register(password):
         for i in range(len(password)):
             if password[i].islower() is True:
-                if password[i].isupper() is True:
-                    return True
-            else:
-                break
+                check_a = True
+        for j in range(len(password)):
+            if password[j].isupper() is True and check_a == True:
+                return True
         return False
 
     @staticmethod
     def is_include_only_latin(password):
-        if password.isalnum() is True:
+        if password.isascii() is True:
             return True
 
     @staticmethod
     def check_password_dictionary(password):
-        passwordlist = open('easy_passwords.txt')
-        for line in passwordlist:
-            if line == password:
+        easy_passwords = []
+        with open('easy_passwords.txt') as inf:
+            for line in inf:
+                line = line.strip()
+                easy_passwords.append(line)
+            if password in easy_passwords:
                 return True
         return False
 
@@ -59,21 +62,22 @@ class Registration:
             raise TypeError("Пароль должен быть строкой")
         if 5 > len(value) > 11:
             raise ValueError('Пароль должен быть длиннее 4 и меньше 12 символов')
-        if not Registration.is_include_number(value):
+        elif not Registration.is_include_number(value):
             raise ValueError('Пароль должен содержать хотя бы одну цифру')
-        if Registration.is_include_all_register(value):
+        elif not Registration.is_include_all_register(value):
             raise ValueError('Пароль должен содержать хотя бы один символ верхнего и нижнего регистра')
-        if not Registration.is_include_only_latin(value):
+        elif not Registration.is_include_only_latin(value):
             raise ValueError('Пароль должен содержать только латинский алфавит')
-        if Registration.check_password_dictionary(value):
+        elif Registration.check_password_dictionary(value):
             raise ValueError('Ваш пароль содержится в списке самых легких')
-        self.__password = value
+        else:
+            self.__password = value
 
 
 r1 = Registration('qwerty@rambler.ru', 'QwrRt124')  # здесь хороший логин
 print(r1.login, r1.password)  # qwerty@rambler.ru QwrRt124
-
+r1.password = 'QwerTy123'
 # теперь пытаемся запись плохие пароли
-r1.password = '123456'  # ValueError('Пароль должен содержать хотя бы один символ верхнего и нижнего регистра')
-# r1.password = 'LoW'  # raise ValueError('Пароль должен быть длиннее 4 и меньше 12 символов')
-# r1.password = 43  # raise TypeError("Пароль должен быть строкой")
+#r1.password = '123456'  # ValueError('Пароль должен содержать хотя бы один символ верхнего и нижнего регистра')
+#r1.password = 'LoW'  # raise ValueError('Пароль должен быть длиннее 4 и меньше 12 символов')
+#r1.password = 43  # raise TypeError("Пароль должен быть строкой")
