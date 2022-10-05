@@ -73,11 +73,12 @@ class Registration:
         else:
             self.__password = value
 
+# Проверка работы:
+#r1 = Registration('qwerty@rambler.ru', 'QwrRt124')  # здесь хороший логин
+#print(r1.login, r1.password)  # qwerty@rambler.ru QwrRt124
 
-r1 = Registration('qwerty@rambler.ru', 'QwrRt124')  # здесь хороший логин
-print(r1.login, r1.password)  # qwerty@rambler.ru QwrRt124
-r1.password = 'QwerTy123'
 # теперь пытаемся запись плохие пароли
+#r1.password = 'QwerTy123' # пароль из списка легких
 #r1.password = '123456'  # ValueError('Пароль должен содержать хотя бы один символ верхнего и нижнего регистра')
 #r1.password = 'LoW'  # raise ValueError('Пароль должен быть длиннее 4 и меньше 12 символов')
 #r1.password = 43  # raise TypeError("Пароль должен быть строкой")
