@@ -31,34 +31,26 @@ class User:
             print('Не хватает средств на балансе. Пополните счет')
             return False
 
-
-import collections
-
+from collections import defaultdict
 
 class Cart:
 
     def __init__(self, user):
         self.user = user
-        self.goods = collections.defaultdict(dict)
+        self.goods = defaultdict(int)
         self.__total = 0
 
     def add(self, product, amount=1):
-        if not isinstance(self.goods[product.name], int):
-            self.goods[product.name] = 0
-        self.goods[product.name] = int(self.goods[product.name]) + amount
+        self.goods[product] += amount
         self.__total += product.price * amount
 
     def remove(self, product, amount=1):
-        if not isinstance(self.goods[product.name], int):
-            self.goods[product.name] = 0
-        if int(self.goods[product.name]) >= amount and product.price * amount <= self.__total:
-            self.goods[product] = int(self.goods[product.name]) - amount
+        if int(self.goods[product]) >= amount and product.price * amount <= self.__total:
+            self.goods[product] -= amount
             self.__total -= product.price * amount
         else:
-            self.__total = 0
-            for element in self.goods:
-
-
+            self.__total -= self.goods[product] * product.price
+            del self.goods[product]
 
     @property
     def total(self):
@@ -69,18 +61,19 @@ class Cart:
             self.user.payment(self.__total)
             print('Заказ оплачен')
         else:
+            print('Не хватает средств на балансе. Пополните счет')
             print('Проблема с оплатой')
 
     def print_check(self):
         print('---Your check---')
-        res = sorted(self.goods.items(), key=lambda x: (-x[1], x[0]))
-        for element in res:
-            print(element)
+        res = sorted(self.goods, key = lambda x: x.name)
+        for i in res:
+            print(f'{i.name} {i.price}', self.goods[i], self.goods[i]*i.price)
 
         print(f'---Total: {self.__total}---')
 
-
-billy = User('billy@rambler.ru')
+#Проверка
+"""billy = User('billy@rambler.ru')
 
 lemon = Product('lemon', 20)
 carrot = Product('carrot', 30)
@@ -122,4 +115,4 @@ cart_billy.order()
 Проблема с оплатой'''
 cart_billy.user.deposit(150)
 cart_billy.order()  # Заказ оплачен
-print(cart_billy.user.balance)  # 20
+print(cart_billy.user.balance)  # 20"""
